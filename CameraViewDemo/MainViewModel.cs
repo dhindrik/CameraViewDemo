@@ -28,6 +28,9 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private bool canRotateCamera;
 
+    [ObservableProperty]
+    private float zoomLevel,maxZoomLevel, minZoomLevel;
+
     public CancellationToken Token => CancellationToken.None;
 
     [RelayCommand]
@@ -59,4 +62,14 @@ public partial class MainViewModel : ObservableObject
 
     public Action<bool?>? SetFlashMode { get; set; }
     public Action? RotateCamera { get; set; }
+
+    partial void OnMinZoomLevelChanged(float oldValue, float newValue)
+    {
+        ZoomLevel = newValue;
+    }
+
+    partial void OnMaxZoomLevelChanged(float oldValue, float newValue)
+    {
+        ZoomLevel = newValue;
+    }
 }

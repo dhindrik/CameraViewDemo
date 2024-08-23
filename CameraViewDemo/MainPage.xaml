@@ -19,7 +19,8 @@
             IsVisible="{Binding ShowCamera}"
             MediaCaptured="OnMediaCaptured"
             SelectedCamera="{Binding SelectedCamera, Source={x:Reference CurrentPage}}"
-            VerticalOptions="Fill" />
+            VerticalOptions="Fill"
+            ZoomFactor="{Binding ZoomLevel}" />
 
         <Image
             Aspect="AspectFit"
@@ -27,6 +28,8 @@
             IsVisible="{Binding ShowPhoto}"
             Source="{Binding Bytes, Converter={StaticResource ToImage}}"
             VerticalOptions="Fill" />
+
+        <Slider VerticalOptions="End" IsVisible="{Binding ShowCamera}" HorizontalOptions="Fill" Maximum="200" Minimum="0" Value="{Binding ZoomLevel}" />
 
         <HorizontalStackLayout
             Grid.Row="1"
@@ -50,6 +53,7 @@
                 HeightRequest="40"
                 ImageSource="{Binding FlashIcon}" />
         </HorizontalStackLayout>
+        
         <HorizontalStackLayout
             Grid.Row="1"
             HorizontalOptions="Center"
@@ -59,12 +63,14 @@
                 Command="{Binding RetakePictureCommand}"
                 HeightRequest="40"
                 ImageSource="undo.png"
-                Text="Retake Picture" />
+                Text="Retake"
+                TextColor="White" />
             <Button
                 Command="{Binding SavePictureCommand}"
                 HeightRequest="40"
                 ImageSource="save.png"
-                Text="Save Picture" />
+                Text="Save" 
+                TextColor="White" />
         </HorizontalStackLayout>
     </Grid>
 

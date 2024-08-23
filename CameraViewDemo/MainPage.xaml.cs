@@ -31,6 +31,8 @@ public partial class MainPage : ContentPage
             OnPropertyChanged();
 
             viewModel.HasFlash = value.IsFlashSupported;
+            viewModel.MinZoomLevel = value.MinimumZoomFactor;
+            viewModel.MaxZoomLevel = value.MaximumZoomFactor;            
         }
     }
 
@@ -67,9 +69,14 @@ public partial class MainPage : ContentPage
     {
         if (cameraProvider.AvailableCameras?.Count > 1)
         {
-            SelectedCamera = SelectedCamera == cameraProvider.AvailableCameras[0]
-                ? cameraProvider.AvailableCameras[1]
-                : cameraProvider.AvailableCameras[0];
+            if(SelectedCamera == cameraProvider.AvailableCameras[0])
+            {
+                SelectedCamera = cameraProvider.AvailableCameras[1];
+            }
+            else
+            {
+                SelectedCamera = cameraProvider.AvailableCameras[0];       
+            }
         }
     }
 }
