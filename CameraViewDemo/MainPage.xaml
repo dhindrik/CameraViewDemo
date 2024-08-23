@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CameraViewDemo.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:CameraViewDemo"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:Name="CurrentPage"
+    x:DataType="local:MainViewModel">
+    <ContentPage.Resources>
+        <toolkit:ByteArrayToImageSourceConverter x:Key="ToImage" />
+    </ContentPage.Resources>
+    <Grid RowDefinitions="*,100">
+        <toolkit:CameraView
+            x:Name="Camera"
+            Grid.RowSpan="2"
+            CameraFlashMode="{Binding FlashMode, Source={x:Reference CurrentPage}}"
+            HorizontalOptions="Fill"
+            IsVisible="{Binding ShowCamera}"
+            MediaCaptured="OnMediaCaptured"
+            SelectedCamera="{Binding SelectedCamera, Source={x:Reference CurrentPage}}"
+            VerticalOptions="Fill" />
+
+        <Image
+            Aspect="AspectFit"
+            HorizontalOptions="Fill"
+            IsVisible="{Binding ShowPhoto}"
+            Source="{Binding Bytes, Converter={StaticResource ToImage}}"
+            VerticalOptions="Fill" />
+
+        <HorizontalStackLayout
+            Grid.Row="1"
+            HorizontalOptions="Center"
+            IsVisible="{Binding ShowCamera}"
+            Spacing="20">
+            <Button
+                Background="Transparent"
+                Command="{Binding RotateCommand}"
+                HeightRequest="40"
+                ImageSource="camera_switch" />
+            <Button
+                Background="Transparent"
+                Command="{Binding CaptureImageCommand, Source={x:Reference Camera}}"
+                CommandParameter="{Binding Token}"
+                HeightRequest="80"
+                ImageSource="camera.png" />
+            <Button
+                BackgroundColor="Transparent"
+                Command="{Binding FlashCommand}"
+                HeightRequest="40"
+                ImageSource="{Binding FlashIcon}" />
+        </HorizontalStackLayout>
+        <HorizontalStackLayout
+            Grid.Row="1"
+            HorizontalOptions="Center"
+            IsVisible="{Binding ShowPhoto}"
+            Spacing="20">
+            <Button
+                Command="{Binding RetakePictureCommand}"
+                HeightRequest="40"
+                ImageSource="undo.png"
+                Text="Retake Picture" />
+            <Button
+                Command="{Binding SavePictureCommand}"
+                HeightRequest="40"
+                ImageSource="save.png"
+                Text="Save Picture" />
+        </HorizontalStackLayout>
+    </Grid>
+
+</ContentPage>
