@@ -6,6 +6,7 @@ namespace CameraViewDemo;
 public partial class MainViewModel : ObservableObject
 {
     private bool? flashOn;
+    private bool isWideMode;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowPhoto))]
@@ -23,6 +24,12 @@ public partial class MainViewModel : ObservableObject
         null => "flash_auto.png",
         false => "flash_off.png",
         _ => "flash_on.png"
+    };
+
+    public string WideIcon => isWideMode switch
+    {
+        true => "minimize.png",
+        false => "expand.png"
     };
 
     [ObservableProperty]
@@ -52,6 +59,17 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void WideAngle()
+    {
+        isWideMode = !isWideMode;
+
+        OnPropertyChanged(nameof(WideIcon));
+
+        ToggleWideAngle?.Invoke();
+    }
+
+
+    [RelayCommand]
     private void RetakePicture()
     {
         Bytes = null;
@@ -62,6 +80,7 @@ public partial class MainViewModel : ObservableObject
 
     public Action<bool?>? SetFlashMode { get; set; }
     public Action? RotateCamera { get; set; }
+    public Action? ToggleWideAngle { get; set; }
 
     partial void OnMinZoomLevelChanged(float oldValue, float newValue)
     {

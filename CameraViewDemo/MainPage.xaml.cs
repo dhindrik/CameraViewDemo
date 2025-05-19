@@ -8,6 +8,7 @@ public partial class MainPage : ContentPage
 {
     private readonly MainViewModel viewModel;
     private readonly ICameraProvider cameraProvider;
+    private const string _wideAngleDeviceIds = "com.apple.avfoundation.avcapturedevice.built-in_video:5";
 
     public MainPage(MainViewModel viewModel, ICameraProvider cameraProvider)
     {
@@ -16,12 +17,15 @@ public partial class MainPage : ContentPage
         this.cameraProvider = cameraProvider;
         BindingContext = viewModel;
 
-        viewModel.CanRotateCamera = cameraProvider.AvailableCameras?.Count > 1;
+       
+
         viewModel.SetFlashMode = SetFlashMode;
         viewModel.RotateCamera = RotateCamera;
+        viewModel.ToggleWideAngle = ToggleWideAngle;
     }
 
     private CameraInfo selectedCamera;
+    private bool isCameraInitialized;
     public CameraInfo SelectedCamera
     {
         get => selectedCamera;
@@ -30,9 +34,16 @@ public partial class MainPage : ContentPage
             selectedCamera = value;
             OnPropertyChanged();
 
+            if (!isCameraInitialized && cameraProvider.AvailableCameras is not null)
+            {
+                viewModel.CanRotateCamera = cameraProvider.AvailableCameras.Where(x => x.Position == CameraPosition.Front)!.Count() > 0;
+            }
+
             viewModel.HasFlash = value.IsFlashSupported;
             viewModel.MinZoomLevel = value.MinimumZoomFactor;
-            viewModel.MaxZoomLevel = value.MaximumZoomFactor;            
+            viewModel.MaxZoomLevel = value.MaximumZoomFactor;
+
+            isCameraInitialized = true;
         }
     }
 
@@ -67,16 +78,28 @@ public partial class MainPage : ContentPage
 
     private void RotateCamera()
     {
-        if (cameraProvider.AvailableCameras?.Count > 1)
+        if (viewModel.CanRotateCamera)
         {
-            if(SelectedCamera == cameraProvider.AvailableCameras[0])
+            if (SelectedCamera == cameraProvider.AvailableCameras[0])
             {
-                SelectedCamera = cameraProvider.AvailableCameras[1];
+                SelectedCamera = cameraProvider.AvailableCameras.First(x => x.Position == CameraPosition.Front);
             }
             else
             {
-                SelectedCamera = cameraProvider.AvailableCameras[0];       
+                SelectedCamera = cameraProvider.AvailableCameras[0];
             }
+        }
+    }
+
+    private void ToggleWideAngle()
+    {
+        if (SelectedCamera.DeviceId != _wideAngleDeviceIds)
+        {
+            SelectedCamera = cameraProvider.AvailableCameras!.First(x => x.DeviceId == _wideAngleDeviceIds);
+        }
+        else
+        {
+            SelectedCamera = cameraProvider.AvailableCameras![0];
         }
     }
 }

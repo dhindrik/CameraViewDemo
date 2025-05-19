@@ -29,7 +29,7 @@
             Source="{Binding Bytes, Converter={StaticResource ToImage}}"
             VerticalOptions="Fill" />
 
-        <Slider VerticalOptions="End" IsVisible="{Binding ShowCamera}" HorizontalOptions="Fill" Maximum="200" Minimum="0" Value="{Binding ZoomLevel}" />
+        <Slider VerticalOptions="End" IsVisible="{Binding ShowCamera}" HorizontalOptions="Fill" Maximum="{Binding MaxZoomLevel}" Minimum="{Binding MinZoomLevel}" Value="{Binding ZoomLevel}" />
 
         <HorizontalStackLayout
             Grid.Row="1"
@@ -52,6 +52,13 @@
                 Command="{Binding FlashCommand}"
                 HeightRequest="40"
                 ImageSource="{Binding FlashIcon}" />
+
+            <Button
+                BackgroundColor="Transparent"
+                Command="{Binding WideAngleCommand}"
+                HeightRequest="40"
+                ImageSource="{Binding WideIcon}"
+                IsVisible="{OnPlatform Default=false,iOS=true}" />
         </HorizontalStackLayout>
         
         <HorizontalStackLayout
